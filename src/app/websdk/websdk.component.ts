@@ -5,10 +5,8 @@ import { CartService } from '../cart.service';
 export interface Config {
   sessionToken: string;
   status: string;
-  orderId : number
+  orderId: number;
 }
-
-
 
 export interface Result {
   status: string;
@@ -19,17 +17,18 @@ export interface Result {
 }
 
 declare global {
-  interface Window { SafeCharge: any; }
+  interface Window {
+    SafeCharge: any;
+  }
 }
 
 @Component({
   selector: 'app-websdk',
   templateUrl: './websdk.component.html',
-  styleUrls: ['./websdk.component.scss']
+  styleUrls: ['./websdk.component.scss'],
 })
-export class WebsdkComponent implements OnInit  {
-
-  constructor(private cartService: CartService) { }
+export class WebsdkComponent implements OnInit {
+  constructor(private cartService: CartService) {}
 
   shippingCosts!: Observable<Config>;
   config: Config | undefined;
@@ -46,13 +45,12 @@ export class WebsdkComponent implements OnInit  {
 
   ngOnInit(): void {
     this.cartService.getShippingPrices().subscribe((data) => {
-      this.config = { ...data}
-      this.attachFields(data)
+      this.config = { ...data };
+      this.attachFields(data);
     });
     // this.result = { result: 'test' }
     // Create a new Observable that will deliver the above sequence
   }
-
 
   setValue(res: any) {
     this.result = res;
@@ -60,13 +58,12 @@ export class WebsdkComponent implements OnInit  {
 
   triggerOverlay(show: string, type: string) {
     let overlay = document.getElementById(type);
-    
-    if (overlay && show === 'show') {
-      overlay.style.visibility = 'visible'
-    } else if (overlay && show === 'hide'){
-      overlay.style.visibility = 'hidden'
-    }
 
+    if (overlay && show === 'show') {
+      overlay.style.visibility = 'visible';
+    } else if (overlay && show === 'hide') {
+      overlay.style.visibility = 'hidden';
+    }
   }
 
   hideOverlay() {
@@ -74,82 +71,82 @@ export class WebsdkComponent implements OnInit  {
   }
 
   createPayment() {
-    new Observable(observer => {
+    new Observable((observer) => {
+      this.triggerOverlay('show', 'loader-bar');
+      this.sfc.createPayment(
+        {
+          sessionToken: this.config?.sessionToken,
+          cardHolderName: 'CL-BRW1',
+          paymentOption: this.cardNumber,
+        },
+        (res: any) => {
+          this.triggerOverlay('hide', 'loader-bar');
+          this.triggerOverlay('show', 'modal');
+          console.log(res);
 
-      this.triggerOverlay('show', 'loader-bar')
-      this.sfc.createPayment({
-		  	"sessionToken":  this.config?.sessionToken, 
-        "cardHolderName": 'CL-BRW1',
-        "paymentOption": this.cardNumber
-      }, (res: any) => {
-        this.triggerOverlay('hide', 'loader-bar');
-        this.triggerOverlay('show', 'modal');
-        console.log(res)
-
-        observer.next(res)
-        observer.complete()
-      })
-    }).subscribe( value => {
-        this.setValue(value);
-    })
+          observer.next(res);
+          observer.complete();
+        }
+      );
+    }).subscribe((value) => {
+      this.setValue(value);
+    });
   }
-  
 
   async attachFields(order: any) {
-    console.log(order)
+    console.log(order);
 
     this.sfc = window.SafeCharge({
       merchantId: order.merchantId,
-      env: 'int', 
+      env: 'int',
       merchantSiteId: order.merchantSiteId,
-    })
+    });
 
     this.fieldStyles = {
       base: {
         fontFamily: 'Roboto, sans-serif',
-        color: "#045d47",
-        fontSize: "14px",
+        color: '#045d47',
+        fontSize: '14px',
         fontSmoothing: 'antialiased',
         '::placeholder': {
-          color: '#00becf'
-        }
+          color: '#00becf',
+        },
       },
       invalid: {
         color: '#e5312b',
         ':focus': {
-          color: '#303238'
-        }
+          color: '#303238',
+        },
       },
       empty: {
         color: '#00becf',
         '::placeholder': {
-          color: '#00becf'
-        }
+          color: '#00becf',
+        },
       },
       valid: {
-        color: '#00A86b'
-      }
+        color: '#00A86b',
+      },
     };
-  
+
     this.fieldClasses = {
-        focus: 'focused',
-        empty: 'empty',
-        invalid: 'invalid',
+      focus: 'focused',
+      empty: 'empty',
+      invalid: 'invalid',
     };
-  
+
     this.ScFields = this.sfc.fields({
-      locale: "en",
+      locale: 'en',
       fonts: [
-          { cssUrl: 'https://fonts.googleapis.com/css?family=Source+Code+Pro' }
-      ]
+        { cssUrl: 'https://fonts.googleapis.com/css?family=Source+Code+Pro' },
+      ],
     });
 
-    
     this.cardNumber = this.ScFields.create('ccNumber', {
       style: this.fieldStyles,
       classes: this.fieldClasses,
     });
-  
+
     this.cardNumber.attach('#card-number');
 
     this.cardExpiry = this.ScFields.create('ccExpiration', {
@@ -166,5 +163,4 @@ export class WebsdkComponent implements OnInit  {
 
     this.cardCvc.attach('#card-cvc');
   }
-
 }
