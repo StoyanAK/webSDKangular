@@ -1,0 +1,6 @@
+{
+    "/": {
+      "target": "https://demos.nuvei.com/websdkdemo/openOrder",
+      "secure": false
+    }
+  }

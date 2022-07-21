@@ -1,0 +1,60 @@
+<h2>Pay with card</h2>
+
+        <div class="row">
+            <div class="field">
+                <label for="card-number" data-tid="scwsdk.form.card_number_label">
+                    Card number
+                </label>
+                <div id="card-number" class="input"></div>
+                <div class="underline"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="field col6">
+                <label for="card-expiry" data-tid="scwsdk.form.card_expiry_label">
+                    Expiration
+                </label>
+                <div id="card-expiry" class="input empty"></div>
+                <div class="underline "></div>
+            </div>
+            <div class="field col6">
+                <label for="card-cvc" data-tid="scwsdk.form.card_cvc_label">
+                    CVC
+                </label>
+                <div id="card-cvc" class="input empty"></div>
+            </div>
+        </div>
+        <button type="button" (click)="createPayment()">Buy</button>
+        <div id="result">
+            <h1>Response:</h1> 
+            <!-- <p *ngIf="result.result">
+                Result: #{{ result.result }}
+            </p> -->
+            <div>Status: {{result?.result}}</div>
+            <div>Error Code: {{result?.errCode}}</div>
+            <div>error Description: {{result?.errorDescription}}</div>
+
+        </div>
+
+
+        <div id="loader-bar">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <div id="modal">
+            <!-- <div class="centerModal"> -->
+                <div class="modalText">Payment is completed</div>
+                <button id="modalButton" type="button" (click)="hideOverlay()" routerLink="/cart">OK</button>
+            <!-- </div> -->
+        <div id="modal">
+
+
+
+  <!-- <span>{{ shippingCosts  }}</span> -->
+<!-- </div>  -->
