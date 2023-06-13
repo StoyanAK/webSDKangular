@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CartService } from '../cart.service';
 
@@ -19,6 +20,7 @@ export interface Result {
 declare global {
   interface Window {
     SafeCharge: any;
+    checkout: any;
   }
 }
 
@@ -28,7 +30,11 @@ declare global {
   styleUrls: ['./websdk.component.scss'],
 })
 export class WebsdkComponent implements OnInit {
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => {
+      return false;
+    };
+  }
 
   shippingCosts!: Observable<Config>;
   config: Config | undefined;
@@ -70,14 +76,33 @@ export class WebsdkComponent implements OnInit {
     this.triggerOverlay('hide', 'modal');
   }
 
-  createPayment() {
+  auth() {
     new Observable((observer) => {
+      var that = this;
       this.triggerOverlay('show', 'loader-bar');
-      this.sfc.createPayment(
+
+      this.sfc.authenticate3d(
         {
           sessionToken: this.config?.sessionToken,
           cardHolderName: 'CL-BRW1',
           paymentOption: this.cardNumber,
+          // "paymentOption" : {
+
+          //   "card"           : {
+
+          //     "cardNumber"       : '4000020951595032',
+
+          //      "cardHolderName"  : 'CL-BRW1',
+
+          //      "expirationMonth" : '11',
+
+          //      "expirationYear"  : '25',
+
+          //      "CVV"             : '333'
+
+          //   }
+
+          // }
         },
         (res: any) => {
           this.triggerOverlay('hide', 'loader-bar');
@@ -92,10 +117,132 @@ export class WebsdkComponent implements OnInit {
       this.setValue(value);
     });
   }
+    getToken() {
+      new Observable((observer) => {
+        var that = this;
+        this.triggerOverlay('show', 'loader-bar');
+        this.sfc.getToken(this.cardNumber,
+          {
+            sessionToken: this.config?.sessionToken,
+          }).then(function(res:any){
+            that.triggerOverlay('hide', 'loader-bar');
+            that.triggerOverlay('show', 'modal');
+            console.log(res);
+            observer.next(res);
+            observer.complete();
+        })
+        // this.sfc.authenticate3d(
+        //   {
+        //     sessionToken: this.config?.sessionToken,
+        //     cardHolderName: 'CL-BRW1',
+        //     // paymentOption: this.cardNumber,
+        //     "paymentOption" : {
+
+        //       "card"           : {
+
+        //         "cardNumber"       : '4000020951595032',
+
+        //          "cardHolderName"  : 'CL-BRW1',
+
+        //          "expirationMonth" : '11',
+
+        //          "expirationYear"  : '25',
+
+        //          "CVV"             : '333'
+
+        //       }
+
+        //     }
+        //   },
+        //   (res: any) => {
+        //     this.triggerOverlay('hide', 'loader-bar');
+        //     this.triggerOverlay('show', 'modal');
+        //     console.log(res);
+
+        //     observer.next(res);
+        //     observer.complete();
+        //   }
+        // );
+      }).subscribe((value) => {
+        this.setValue(value);
+      });
+    }
+
+  createPayment() {
+    new Observable((observer) => {
+      var that = this;
+      this.triggerOverlay('show', 'loader-bar');
+      this.sfc.getToken(this.cardNumber,
+        {
+          sessionToken: this.config?.sessionToken,
+        }).then(function(res:any){
+          that.triggerOverlay('hide', 'loader-bar');
+          that.triggerOverlay('show', 'modal');
+          console.log(res);
+          observer.next(res);
+          observer.complete();
+      })
+      // this.sfc.authenticate3d(
+      //   {
+      //     sessionToken: this.config?.sessionToken,
+      //     cardHolderName: 'CL-BRW1',
+      //     // paymentOption: this.cardNumber,
+      //     "paymentOption" : {
+
+      //       "card"           : {
+
+      //         "cardNumber"       : '4000020951595032',
+
+      //          "cardHolderName"  : 'CL-BRW1',
+
+      //          "expirationMonth" : '11',
+
+      //          "expirationYear"  : '25',
+
+      //          "CVV"             : '333'
+
+      //       }
+
+      //     }
+      //   },
+      //   (res: any) => {
+      //     this.triggerOverlay('hide', 'loader-bar');
+      //     this.triggerOverlay('show', 'modal');
+      //     console.log(res);
+
+      //     observer.next(res);
+      //     observer.complete();
+      //   }
+      // );
+    }).subscribe((value) => {
+      this.setValue(value);
+    });
+  }
 
   async attachFields(order: any) {
     console.log(order);
 
+    // window.checkout({
+    //   renderTo: '#card-number',
+    //   sessionToken: order.sessionToken,
+    //   merchantSiteId: order.merchantSiteId,
+    //   merchantId: order.merchantId,
+    //   userTokenId: '230811147123',
+    //   clientUniqueId: '695701003A',
+    //   // clientUniqueId: '695703', // globalpay
+    //   userId: '850512345', // globalpay
+    //   // userId: 'MMSJBYXB9AGB', // sightline
+    //   env: 'int',
+    //   webSdkEnv: 'localDev', // dev or missing if using prod cdn
+    //   country: 'US',
+    //   locale: 'en',
+    //   currency: 'USD', //CURRENCY IS NEEDED FOR VISUALS AND PM LISTING
+    //   amount: 115.2,
+    //   pmBlacklist: ['ppp_ApplePay'],
+    //   cardAuthMode: '3dAuthOnly',
+    //   showResponseMessage: false,
+    //   alwaysCollectCvv: false
+    // });
     this.sfc = window.SafeCharge({
       merchantId: order.merchantId,
       env: 'int',

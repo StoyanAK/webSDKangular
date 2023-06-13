@@ -10,21 +10,10 @@
   </div>
 </div>
 <div class="row">
-  <div class="field col6">
-    <label for="card-expiry" data-tid="scwsdk.form.card_expiry_label">
-      Expiration
-    </label>
-    <div id="card-expiry" class="input empty"></div>
-    <div class="underline"></div>
-  </div>
-  <div class="field col6">
-    <label for="card-cvc" data-tid="scwsdk.form.card_cvc_label"> CVC </label>
-    <div id="card-cvc" class="input empty"></div>
-  </div>
-</div>
+
 <button type="button" (click)="createPayment()">payment</button>
-<button type="button" (click)="auth()">auth</button>
-<button type="button" (click)="getToken()">Get Token</button>
+<button type="button" (click)="auth()">Auth</button>
+<button type="button" (click)="getToken()">getToken</button>
 
 <div id="result">
   <h1>Response:</h1>
@@ -49,7 +38,7 @@
 <div id="modal">
   <!-- <div class="centerModal"> -->
   <div class="modalText">Payment is completed</div>
-  <button id="modalButton" type="button" (click)="hideOverlay()" routerLink="/cart">
+  <button id="modalButton" type="button" (click)="hideOverlay()" routerLink="/cartonefield" >
     OK
   </button>
   <!-- </div> -->

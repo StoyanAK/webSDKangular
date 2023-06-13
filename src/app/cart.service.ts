@@ -12,7 +12,7 @@ export interface Config {
   providedIn: 'root'
 })
 export class CartService {
-  
+
   constructor(
     private http: HttpClient
   ) { }
@@ -43,14 +43,14 @@ export class CartService {
   getItems() {
     return this.items
   }
-  
+
   clearCart() {
     this.items = [];
     return this.items;
   }
 
   getShippingPrices() {
-    return this.http.get<Config>('https://n-fix-cors.herokuapp.com/https://demos.nuvei.com/websdkdemo/openOrder');
+    return this.http.get<Config>('https://proxy-websdk.fly.dev/https://demos.nuvei.com/websdkdemo/openOrder');
   }
-  
+
 }

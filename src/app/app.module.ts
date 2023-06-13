@@ -12,6 +12,9 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { CartComponent } from './cart/cart.component';
 import { WebsdkComponent } from './websdk/websdk.component';
+import { CartOnefieldComponent } from './cart-onefield/cart-onefield.component';
+import { WebsdkOnefieldComponent } from './websdk-onefield/websdk-onefield.component';
+import { CartWithoutFieldsComponent } from './cart-without-fields/cart-without-fields.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { WebsdkComponent } from './websdk/websdk.component';
     TopBarComponent,
     ProductDetailsComponent,
     CartComponent,
-    WebsdkComponent
+    WebsdkComponent,
+    CartOnefieldComponent,
+    WebsdkOnefieldComponent,
+    CartWithoutFieldsComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +37,12 @@ import { WebsdkComponent } from './websdk/websdk.component';
       // { path: '/products', component: ProductListComponent },
       { path: 'products/:productId', component: ProductDetailsComponent },
       { path: 'cart', component: CartComponent },
-    ])
+      { path: 'cartonefield', component: CartOnefieldComponent },
+      { path: 'withoutfields', component: CartWithoutFieldsComponent },
+    ],
+    {
+      onSameUrlNavigation: 'reload',
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
